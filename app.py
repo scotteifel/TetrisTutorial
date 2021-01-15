@@ -206,8 +206,8 @@ def draw_text_middle(surface, text, size, color):
     font = pygame.font.SysFont('comicsans', size, bold = True)
     label = font.render(text, 1, color)
 
-    surface.blit(label, (top_left_x+ play_width/2 - (label.get_width()/2),
-                    top_left_y + play_height /2 - label.get_height()/2))
+    surface.blit(label, (int(top_left_x+ play_width/2- (label.get_width()/2)),
+                    int(top_left_y + play_height/2 - label.get_height()/2)))
 
 
 def draw_grid(surface, grid):
@@ -259,8 +259,11 @@ def draw_next_shape(shape, surface):
         row = list(line)
         for j, column in enumerate(row):
             if column == '0':
-                pygame.draw.rect(surface, shape.color, (sx + j*30, sy + i*30,
-                        30, 30))
+                pygame.draw.rect(surface, shape.color, (int(sx + j*30),
+                                            int(sy + i*30), 30, 30))
+                pygame.draw.rect(surface, (128,128,128), (int(sx + j*30),
+                                            int(sy + i*30), 30, 30), 1)
+
 
     surface.blit(label, (int(sx + 10), int(sy - 30)))
 
@@ -272,15 +275,14 @@ def draw_window(surface, grid, score=0, last_score=0):
     pygame.font.init()
     font = pygame.font.SysFont('comicsans', 60)
     label = font.render('Tetris', 1, (255,255,255))
-    surface.blit(label,(top_left_x+play_width/2 - (label.get_width()/2), 30))
-
+    surface.blit(label,(int(top_left_x + play_width/2-
+                                (label.get_width() / 2)), 30))
 
     font = pygame.font.SysFont('comicsans', 30)
     label = font.render('Score ' + str(score), 1, (255,255,255))
     sx = top_left_x + play_width + 50
     sy = top_left_y + play_height/2 - 100
     surface.blit(label, (int(sx + 40), int(sy + 180)))
-
 
     label = font.render('HighScore ' + str(last_score), 1, (255,255,255))
     sx = top_left_x + play_width
@@ -293,7 +295,7 @@ def draw_window(surface, grid, score=0, last_score=0):
             pygame.draw.rect(surface, grid[i][j], (top_left_x + j* 30,
             top_left_y + i *30,30,30), 0)
 
-            # draw grid and border
+            # draw grid border
     pygame.draw.rect(surface, (255, 0, 0), (top_left_x, top_left_y,
                         play_width, play_height), 5)
 
@@ -338,7 +340,6 @@ def main():
     score = 0
 
 
-
     while run:
         grid = create_grid(locked_positions)
         fall_time += clock.get_rawtime()
@@ -368,7 +369,7 @@ def main():
 
             if event.type == pygame.KEYDOWN:
 
-                if event.key == pygame. K_LEFT:
+                if event.key == pygame.K_LEFT:
                     current_piece.x -= 1
                     if not (valid_space(current_piece,grid)):
                         current_piece.x += 1
